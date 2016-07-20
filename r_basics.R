@@ -3,8 +3,8 @@
 ### navigating directories
 getwd()# current working directory
 dir()# files in directory
-wd = 'C:/Users/KLN/some_r'# change to your path and make course directory
-# paste(getwd(),'/tmgu',sep = '')
+wd <-  paste(getwd(),'/some_r',sep = '')
+dir.create(wd)
 setwd(wd)
 
 ### use R for basic calculations
