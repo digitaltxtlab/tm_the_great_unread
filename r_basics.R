@@ -3,7 +3,7 @@
 ### navigating directories
 getwd()# current working directory
 dir()# files in directory
-wd = 'C:/Users/KLN/some_r'
+wd = 'C:/Users/KLN/some_r'# change to your path and make course directory: paste(getwd(),'/tmgu',sep = '')
 # wd = 'C:/Users/KLN/Documents/courses/au_summer_university/summer_u2016/classes/tutorials'
 setwd(wd)
 
