@@ -1,9 +1,10 @@
+shell.exec('https://eight2late.wordpress.com/2015/11/06/a-gentle-introduction-to-naive-bayes-classification-using-r/')
+
 # classification
 rm(list = ls())
 wd <- 'C:/Users/KLN/some_r'
 setwd(wd)
 source('util_fun.R')
-
 
 input.dir <- 'C:/Users/KLN/some_r/data/nt_hist'
 files.v <- dir(path = input.dir, pattern='.*txt')
@@ -57,7 +58,7 @@ print(text.dtm)
 # transform to matrix object
 text.mat <- as.matrix(text.dtm)
 rownames(text.mat) <- names(text.l)
-
+text.mat[1:10,1:10]
 
 
 # exclude Thomas and build data frame
@@ -70,7 +71,6 @@ pred.v <- predict(model.nb, feat1.df)
 # conditional posterior probabilities
 predraw.v <- predict(model.nb, feat1.df,type = 'raw')
 confusion.mat <- as.matrix(table(pred.v,feat1.df$book))
-
 
 accuracy <- sum(diag(confusion.mat))/sum(confusion.mat)
 print(accuracy)
@@ -92,9 +92,7 @@ feat2.df <- data.frame(book = class.v[idx],text.mat[idx,])
 predthom.v <- predict(model.nb, feat2.df)
 plot(table(predthom.v))
 
-
 predAct <- data.frame(pred.v,feat1.df$book)
-prf(predAct)
 
 
 ##############################
@@ -121,7 +119,7 @@ mdl1.l <- train_models(container, algorithms='SVM')
 mdl2.l <- train_models(container, algorithms = c('SVM','NNET','TREE') )
 
 # Classifying data
-res.df <- classify_models(container, mdl1)
+res.df <- classify_models(container, mdl2.l)
 head(res.df)
 confusion.mat <- as.matrix(table(res.df$SVM_LABEL, container@testing_codes))
 rownames(confusion.mat) <- colnames(confusion.mat) <- unique(class.v)
@@ -129,6 +127,6 @@ print(confusion.mat)
 accuracy <- sum(diag(confusion.mat))/sum(confusion.mat)
 
 # performance metrics
-analytics <- create_analytics(container, results)
+analytics <- create_analytics(container, res.df)
 class(analytics)
 summary(analytics)
