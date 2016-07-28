@@ -1,5 +1,3 @@
-shell.exec('https://eight2late.wordpress.com/2015/11/06/a-gentle-introduction-to-naive-bayes-classification-using-r/')
-
 # classification
 rm(list = ls())
 wd <- 'C:/Users/KLN/some_r'
