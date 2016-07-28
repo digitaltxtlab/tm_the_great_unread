@@ -186,7 +186,7 @@ nt.sent.v <- afinncorpus(nt.cor)
 ot.sent.v <- afinncorpus(old.cor)
 par(mfrow = c(1,2)); 
 barplot(nt.sent.v, main="KJV NT", horiz=TRUE); abline(v = mean(nt.sent.v), col = 'red')
-barplot(old.sent.v, main="KJV OT", horiz=TRUE); abline(v = mean(ot.sent.v), col = 'red')
+barplot(ot.sent.v, main="KJV OT", horiz=TRUE); abline(v = mean(ot.sent.v), col = 'red')
 ###### sentiment classifier
 ## annotate sentences with with class valence and split in training and test set
 # training set
