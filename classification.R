@@ -81,9 +81,7 @@ plot + geom_tile(aes(x=pred.v, y=Var2, fill=Freq)) +
   scale_y_discrete(name="Predicted Class") + 
   scale_fill_gradient(breaks=seq(from=-.5, to=4, by=.2)) + 
   labs(fill="Frequency")
-# chance level
-table(feat1.df$book)
-chance <- 100/sum(table(feat1.df$book))
+
 # predict class of Thomas (early or late)
 idx <- which(class.v == 'Thomas')
 feat2.df <- data.frame(book = class.v[idx],text.mat[idx,]) 
