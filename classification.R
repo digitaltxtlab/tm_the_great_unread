@@ -24,6 +24,7 @@ maketext <- function(files,directory){
 }  
 
 text.word.l <- maketext(files.v,input.dir)
+names(text.word.l)
 texttitle.l <- gsub("\\..*","",files.v)
 
 # slice tokenized text in n chuncks
@@ -36,6 +37,7 @@ nchunk <- function(tokens,n){
 nslice.l <- lapply(text.word.l,nchunk,100)
 # unlist multiple list while preserving sublist names
 text.l <- unlist(nslice.l, recursive=FALSE)
+
 # get class information
 class.v <- gsub('\\..*','',names(text.l))
 # create corpus from chunks
@@ -59,36 +61,72 @@ rownames(text.mat) <- names(text.l)
 text.mat[1:10,1:10]
 
 
-# exclude Thomas and build data frame
+# full model predict class of Thomas and build data frame
 idx <- which(class.v != 'Thomas')
+
+# classical validation procedure
+train <- ifelse(runif(length(class.v)) < 0.80,1,0)
+idx <- which(train == 1)
+
+# build feature set for training
 feat1.df <- data.frame(book = class.v[idx],text.mat[idx,])
+head(feat1.df[1:10,1:10])
 # naive bayes classifier (categorical data, but assumes independence)
 library(e1071)
 model.nb <- naiveBayes(book ~ ., data = feat1.df)
 pred.v <- predict(model.nb, feat1.df)
+
 # conditional posterior probabilities
 predraw.v <- predict(model.nb, feat1.df,type = 'raw')
-confusion.mat <- as.matrix(table(pred.v,feat1.df$book))
+head(predraw.v)
 
+
+confusion.mat <- as.matrix(table(pred = pred.v,true = feat1.df$book))
+
+# performance metric
 accuracy <- sum(diag(confusion.mat))/sum(confusion.mat)
 print(accuracy)
+
 # plot confusion
 library(ggplot2)
 dev.new()
 plot <- ggplot(as.data.frame(confusion.mat))
-plot + geom_tile(aes(x=pred.v, y=Var2, fill=Freq)) + 
-  scale_x_discrete(name="Actual Class") + 
-  scale_y_discrete(name="Predicted Class") + 
+plot + geom_tile(aes(x=pred, y=true, fill=Freq)) + 
+  scale_x_discrete(name="Predicted Class") + 
+  scale_y_discrete(name="True Class") + 
   scale_fill_gradient(breaks=seq(from=-.5, to=4, by=.2)) + 
   labs(fill="Frequency")
+
+
+# chance level
+table(feat1.df$book)
+#chance <- 100/sum(table(feat1.df$book))
+
+# testing procedure
+idx <- which(train != 1)
+feat2.df <- data.frame(book = class.v[idx],text.mat[idx,]) 
+test.v <- predict(model.nb, feat2.df)
+confusion.mat <- as.matrix(table(test.v,feat2.df$book))
+accuracy <- sum(diag(confusion.mat))/sum(confusion.mat)
 
 # predict class of Thomas (early or late)
 idx <- which(class.v == 'Thomas')
 feat2.df <- data.frame(book = class.v[idx],text.mat[idx,]) 
 predthom.v <- predict(model.nb, feat2.df)
+dev.new()
 plot(table(predthom.v))
-
 predAct <- data.frame(pred.v,feat1.df$book)
+
+# random performance (compare to full model)
+classrand.v <- sample(class.v)
+featrand.df <- data.frame(book = classrand.v[idx],text.mat[idx,])
+modelrand.nb <- naiveBayes(book ~ ., data = featrand.df)
+predrand.v <- predict(modelrand.nb, featrand.df)
+# conditional posterior probabilities
+confusion.mat <- as.matrix(table(predrand.v,featrand.df$book))
+# performance metric
+accuracy <- sum(diag(confusion.mat))/sum(confusion.mat)
+print(accuracy)
 
 
 ##############################
