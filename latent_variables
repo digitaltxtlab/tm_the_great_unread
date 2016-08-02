@@ -154,13 +154,12 @@ k = 100
 best.mdl <- list()
 perplex.mat <- matrix(0,k-1,2)
 for(i in 2:k){
-  #best.mdl[[i-1]] <- LDA(books.dtm, i)
+  best.mdl[[i-1]] <- LDA(books.dtm, i)
   print(paste('k =',i, sep = ' '))
-  perplex.mat[i-1,1] <- i
-  perplex.mat[i-1,1] <- perplexity(LDA(books.dtm, i))
- # progress.bar$step()
+  #progress.bar$step()
 }
 save(best.mdl,file = 'estimate_k.RData')
+#load('estimate_k.RData')
 perplex.mat <- as.matrix(unlist(lapply(best.mdl, perplexity)))
 plot(perplex.mat, main= 'Parameter estimation', xlab = 'k', ylab = 'Perplexity')
 
@@ -172,7 +171,3 @@ terms(best.mdl[[19]],10)
 top2 <- topics(best.mdl[[19]],2)
 colnames(top2) <- filenames
 print(top2)
-
-
-
-
