@@ -165,9 +165,9 @@ plot(perplex.mat, main= 'Parameter estimation', xlab = 'k', ylab = 'Perplexity')
 
 # unpack model
 # ten most likely terms in each topic
-terms(best.mdl[[19]],10)
+terms(best.mdl[[18]],10)
 
 # two dominant topics for all documents
-top2 <- topics(best.mdl[[19]],2)
+top2 <- topics(best.mdl[[18]],2)
 colnames(top2) <- filenames
 print(top2)
